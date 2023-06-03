@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Workout = require("../models/workoutStructure")
 
 
 const getAllWorkOuts = (req,res)=>{
@@ -7,12 +8,20 @@ const getAllWorkOuts = (req,res)=>{
         message: "you have accessed all routes"
     })
 }
-const createNewWorkout = (req,res)=>{
-    const workout = req.body;
-    res.status(200).json({
-        workout,
-        message: "you have created a new workout"
-    })
+const createNewWorkout = async (req,res)=>{
+    const {title,load,reps} = req.body;
+
+    try{
+        const workout = await Workout.create({title,load,reps})
+        res.status(200).json(workout)
+    }catch(error){
+        res.status(400).json({
+            error,
+            status: "failed",
+            message: "failure failure"
+        })
+    }
+    
 }
 
 const getSingleWorkout  = (req,res)=>{
